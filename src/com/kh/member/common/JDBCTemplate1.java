@@ -48,4 +48,25 @@ public class JDBCTemplate1 {
 			e.printStackTrace();
 		}
 	}
+	// 트랜젝션 제어(commit)
+		public void commit() {
+			try {
+				if(conn != null && !conn.isClosed()) {
+					conn.commit();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		// 트랜젝션 제어(rollback)
+		public void rollback() {
+			try {
+				if(conn != null && !conn.isClosed()) {
+					conn.commit();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
 }

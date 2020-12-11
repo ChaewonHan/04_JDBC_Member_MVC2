@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import com.kh.member.common.JDBCTemplate1;
 import com.kh.member.common.JDBCTemplate2;
+import com.kh.member.common.JDBCTemplate3;
 import com.kh.member.model.vo.Member;
 
 public class MemberDAO {
@@ -32,20 +33,22 @@ public class MemberDAO {
 			System.out.println("오류발생 : 관리자에게 문의하세요~!");
 			e.printStackTrace();
 		}finally {
-			try {
-				stmt.close();
-			} catch (SQLException e) {
-				System.out.println("오류발생 : 관리자에게 문의하세요~!");
-				e.printStackTrace();
-			}
+//			try {
+//				stmt.close();
+//			} catch (SQLException e) {
+//				System.out.println("오류발생 : 관리자에게 문의하세요~!");
+//				e.printStackTrace();
+//			}
+			// JDBCTemplate3에 있는 close() 사용
+			JDBCTemplate3.close(stmt);
 		}
 		return result;
 	}
 
 	// 회원 정보 수정
-	public int updateMember(Member mb) {
+	public int updateMember(Connection conn, Member mb) {
 		// DB연결을 위한 참조변수
-		Connection conn = null;
+
 		String query = null;
 		PreparedStatement pstmt = null;
 		int result = 0;
@@ -55,7 +58,6 @@ public class MemberDAO {
 		}
 		
 		try {
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","STUDENT","STUDENTPASS");
 			query = "UPDATE MEMBER SET MEMBER_PWD=?, GENDER=?, AGE=?, EMAIL=?, PHONE=?, ADDRESS=?, HOBBY=? WHERE MEMBER_ID=?";
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, mb.getMemberPwd());
@@ -71,20 +73,14 @@ public class MemberDAO {
 		} catch (SQLException e) {
 			System.out.println("오류발생 : 관리자에게 문의하세요");
 		} finally {
-			try {
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e2) {
-				System.out.println("오류발생 : 관리자에게 문의하세요");
-			}
+			JDBCTemplate3.close(pstmt);
 		}
 		
 		return result;		
 	}
 	
 	// 회원 삭제
-	public int deleteMember(String id) {
-		Connection conn = null;
+	public int deleteMember(Connection conn, String id) {
 		String query = null;
 		PreparedStatement pstmt = null;
 		int result = 0;
@@ -94,7 +90,6 @@ public class MemberDAO {
 		}
 		
 		try {
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","STUDENT","STUDENTPASS");
 			query = "DELETE FROM MEMBER WHERE MEMBER_ID = ?";
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, id);
@@ -103,19 +98,13 @@ public class MemberDAO {
 		} catch (SQLException e) {
 			System.out.println("오류발생 : 관리자에게 문의하세요");
 		} finally {
-			try {
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e2) {
-				System.out.println("오류발생 : 관리자에게 문의하세요");
-			}
-		}	
+				JDBCTemplate3.close(pstmt);
+		}
 		return result;
 	}
 	
 	// 회원 목록 조회
-	public ArrayList<Member> allListMember() {
-		Connection conn = null;
+	public ArrayList<Member> allListMember(Connection conn) {
 		String query = null;
 		Statement stmt = null;
 		ResultSet rset = null;
@@ -124,7 +113,7 @@ public class MemberDAO {
 		ArrayList<Member> list = new ArrayList<Member>();
 
 		try {
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","STUDENT","STUDENTPASS");
+
 			query = "SELECT * FROM MEMBER";
 			stmt = conn.createStatement();
 			rset = stmt.executeQuery(query);
@@ -139,21 +128,15 @@ public class MemberDAO {
 		} catch (SQLException e) {
 			System.out.println("오류 발생 : 관리자에게 문의하세요");
 		} finally {
-			try {
-				rset.close();
-				stmt.close();
-				conn.close();
-			} catch (SQLException e2) {
-				System.out.println("오류 발생 : 관리자에게 문의하세요");
-			}
+			JDBCTemplate3.close(stmt);
+			JDBCTemplate3.close(rset);
 		}
 		return list;
 	}
 	
 	// 회원정보 조회(ID)
-	public Member searchMemberId(String id) {
+	public Member searchMemberId(Connection conn, String id) {
 		// DB연결을 위한 참조변수
-		Connection conn = null;
 		String query = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
@@ -161,7 +144,6 @@ public class MemberDAO {
 			// 조회해온 데이터가 있을 때는 Member객체를 만들어서 저장하고, 없을때는 null
 		Member mb = null;
 		try {
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","STUDENT","STUDENTPASS");
 			// DB에서 아이디로 회원 조회
 			query = "SELECT * FROM MEMBER WHERE MEMBER_ID = ?";
 			pstmt = conn.prepareStatement(query);
@@ -178,21 +160,15 @@ public class MemberDAO {
 		} catch (SQLException e) {
 			System.out.println("오류발생 : 관리자에게 문의하세요");
 		} finally {
-			try {
-				rset.close();
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e2) {
-				System.out.println("오류발생 : 관리자에게 문의하세요");
-			}
+			JDBCTemplate3.close(pstmt);
+			JDBCTemplate3.close(rset);
 		}
 		return mb;
 	}
 
 	// 회원정보 조회(이름)
-	public ArrayList<Member> searchMemberName(String name) {
+	public ArrayList<Member> searchMemberName(Connection conn, String name) {
 		// DB연결을 위한 참조변수
-		Connection conn = null;
 		String query = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
@@ -200,7 +176,7 @@ public class MemberDAO {
 			// 이름이 같은 회원이 있는 경우 여러 데이터가 조회될 수 있기 때문에 List에 담아줌
 		ArrayList<Member> list = new ArrayList<Member>();
 		try {
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","STUDENT","STUDENTPASS");
+		
 			// DB에서 아이디로 회원 조회
 			query = "SELECT * FROM MEMBER WHERE MEMBER_NAME = ?";
 			pstmt = conn.prepareStatement(query);
@@ -217,13 +193,8 @@ public class MemberDAO {
 		} catch (SQLException e) {
 			System.out.println("오류발생 : 관리자에게 문의하세요");
 		} finally {
-			try {
-				rset.close();
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e2) {
-				System.out.println("오류발생 : 관리자에게 문의하세요");
-			}
+			JDBCTemplate3.close(pstmt);
+			JDBCTemplate3.close(rset);
 		}
 		return list;
 	}

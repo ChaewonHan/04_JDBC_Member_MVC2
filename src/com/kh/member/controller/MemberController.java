@@ -75,52 +75,24 @@ public class MemberController {
 	}
 
 	// 회원 정보 수정
-	public void updateMember() {
-//		// 뷰에서 사용자에게 수정할 아이디 입력 받기
-//		String id = mv.inputId("수정");
-//		// 모델(DAO)에 아이디 전달해서 정보 조회 후 조회된 데이터 Member객체에 저장해서 반환
-//		Member mb = md.searchMemberId(id);
-//		// 뷰에 조회된 데이터를 전달하고, 수정할 데이터를 입력받아서 Member객체에 저장해서 반환
-//		Member newMb = mv.updateMember(mb);
-//		// 모델(DAO)에 수정할 데이터를 전달해서 DB 수정 후 결과를 반환
-//		int result = md.updateMember(newMb);
-//		// 뷰에서 결과에 따라 출력 내용 결정
-//		mv.printResult(result, "정보 수정");
-		
-		// 위코드를 한줄로 작성
-//		mv.printResult(md.updateMember(mv.updateMember(md.searchMemberId(mv.inputId("수정")))),"정보 수정");
-		
+	public void updateMember() {		
 	// 컨트롤러에서 조회된 데이터 유무 확인 후 기능 수행
 		// 수정할 아이디 입력 받아서 DB에서 조회
-		Member mb = md.searchMemberId(mv.inputId("수정"));
+		Member mb = ms.searchMemberId(mv.inputId("수정"));
 		if(mb == null) {
 			mv.printNotFoundMember();
 		}else {
-			mv.printResult(md.updateMember(mv.updateMember(mb)), "수정");
+			mv.printResult(ms.updateMember(mv.updateMember(mb)), "수정");
 		}
 	
 	}
 	 
 	// 회원 삭제
 	public void deleteMember() {
-//		// 뷰에서 사용자에게 수정할 아이디 입력 받기
-//		String id = mv.inputId("삭제");
-//		// 모델(DAO)에 아이디 전다해서 정보 조회 후 조회된 데이터 Member객체에 저장해서 반환
-//		Member mb = md.searchMemberId(id);
-//		// 뷰에 조회된 데이터를 전달하고 삭제 여부 확인 후 삭제 할꺼면 id값, 아니면 null 값 반환
-//		id = mv.deleteMember(mb);
-//		// 모델(DAO)에 삭제 할 아이디 전달해서 DB에서 삭제 후 결과를 반환
-//		int result = md.deleteMember(id);
-//		// 뷰에서 결과에 따라 출력 내용 결정
-//		mv.printResult(result, "삭제");
-		
-		// 위코드를 한줄로 작성
-//		mv.printResult(md.deleteMember(mv.deleteMember(md.searchMemberId(mv.inputId("삭제")))), "삭제");
-
 	// 컨트롤러에서 조회된 데이터 유무 확인 후 기능 수행
-		String id = mv.deleteMember(md.searchMemberId(mv.inputId("삭제")));
+		String id = mv.deleteMember(ms.searchMemberId(mv.inputId("삭제")));
 		if(id != null) {
-			mv.printResult(md.deleteMember(id), "삭제");			
+			mv.printResult(ms.deleteMember(id), "삭제");			
 		}	
 	}
 	 
@@ -132,7 +104,7 @@ public class MemberController {
 //		mv.allListMember(list);
 		
 		// 위 코드 한줄로 작성
-		mv.allListMember(md.allListMember());
+		mv.allListMember(ms.allListMember());
 	}
 	
 	// 회원 정보 조회(ID)
@@ -145,7 +117,7 @@ public class MemberController {
 //		mv.searchMemberId(mb);
 		
 		// 위 코드 한줄로 작성
-		mv.searchMemberId(md.searchMemberId(mv.inputId("조회")));
+		mv.searchMemberId(ms.searchMemberId(mv.inputId("조회")));
 	}
 
 	// 회원 정보 조회(이름)
@@ -158,7 +130,7 @@ public class MemberController {
 //		mv.searchMemberName(list);
 		
 		// 위 코드 한줄로 작성
-		mv.searchMemberName(md.searchMemberName(mv.inputName("조회")));
+		mv.searchMemberName(ms.searchMemberName(mv.inputName("조회")));
 	}
 }
 
